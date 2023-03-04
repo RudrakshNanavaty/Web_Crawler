@@ -7,9 +7,27 @@ async function main() {
 	else {
 		const pages = await crawlPage(process.argv[2], process.argv[2], {});
 
-		console.log('\n');
-		console.debug(pages);
+		printReport(pages);
 	}
 }
 
 main();
+
+/**
+ * Prints the report on the website's internal linking profile
+ * @param {Object} pages
+ */
+function printReport(pages) {
+	// convert to array of objects
+	pages = Object.entries(pages).map(([key, value]) => {
+		return { url: key, count: value };
+	});
+
+	pages.sort((page1, page2) => page1 - page2);
+
+	console.log('\nDone.\n\nGenerating Report...\n');
+
+	pages.forEach(page => {
+		console.log(`Found ${page.count} internal links to ${page.url}`);
+	});
+}
